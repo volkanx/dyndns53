@@ -1,0 +1,23 @@
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynDns53.CoreLib", "DynDns53.CoreLib\DynDns53.CoreLib.csproj", "{A5E78A8C-69B7-4109-B78C-22D7F4603146}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynDns53.CoreLib.UnitTests", "DynDns53.CoreLib.UnitTests\DynDns53.CoreLib.UnitTests.csproj", "{D7AC8413-3C39-4EB2-9497-D21C5D69C385}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A5E78A8C-69B7-4109-B78C-22D7F4603146}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A5E78A8C-69B7-4109-B78C-22D7F4603146}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A5E78A8C-69B7-4109-B78C-22D7F4603146}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A5E78A8C-69B7-4109-B78C-22D7F4603146}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D7AC8413-3C39-4EB2-9497-D21C5D69C385}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D7AC8413-3C39-4EB2-9497-D21C5D69C385}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D7AC8413-3C39-4EB2-9497-D21C5D69C385}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D7AC8413-3C39-4EB2-9497-D21C5D69C385}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

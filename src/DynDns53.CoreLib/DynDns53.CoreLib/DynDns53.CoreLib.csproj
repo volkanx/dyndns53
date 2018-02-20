@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <PackageId>DynDns53CoreLib</PackageId>
+    <Version>1.0.0</Version>
+    <Authors>Volkan Paksoy</Authors>
+    <Company></Company>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.1" />
+    <PackageReference Include="AWSSDK.Route53" Version="3.3.14" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Config\AppConfigHandler.cs" />
+    <Compile Remove="Class1.cs" />
+  </ItemGroup>
+</Project>
