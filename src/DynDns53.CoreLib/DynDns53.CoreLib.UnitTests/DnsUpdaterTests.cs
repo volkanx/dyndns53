@@ -10,6 +10,7 @@ using DynDns53.CoreLib.Config;
 using Amazon.Route53;
 using Amazon.Route53.Model;
 using System.Threading;
+using DynDns53.CoreLib.IPChecker;
 
 namespace DynDns53.UnitTests
 {
@@ -25,7 +26,7 @@ namespace DynDns53.UnitTests
             string zoneId = "ABCD123456";
 
             var mockIpChecker = new Mock<IIpChecker>();
-            mockIpChecker.Setup(m => m.GetExternalIp()).Returns(currentExternalIp);
+            mockIpChecker.Setup(m => m.GetExternalIpAsync()).ReturnsAsync(currentExternalIp);
 
             var mockConfigHandler = new Mock<IConfigHandler>();
             mockConfigHandler.Setup(m => m.GetConfig()).Returns(new DynDns53Config()
@@ -71,7 +72,7 @@ namespace DynDns53.UnitTests
             string zoneId = "ABCD123456";
 
             var mockIpChecker = new Mock<IIpChecker>();
-            mockIpChecker.Setup(m => m.GetExternalIp()).Returns(currentExternalIp);
+            mockIpChecker.Setup(m => m.GetExternalIpAsync()).ReturnsAsync(currentExternalIp);
             
             var mockConfigHandler = new Mock<IConfigHandler>();
             mockConfigHandler.Setup(m => m.GetConfig()).Returns(new DynDns53Config()
@@ -115,7 +116,7 @@ namespace DynDns53.UnitTests
             string zoneId = "ABCDEFGHI";
 
             var mockIpChecker = new Mock<IIpChecker>();
-            mockIpChecker.Setup(m => m.GetExternalIp()).Returns(currentExternalIp);
+            mockIpChecker.Setup(m => m.GetExternalIpAsync()).ReturnsAsync(currentExternalIp);
 
             var mockConfigHandler = new Mock<IConfigHandler>();
             mockConfigHandler.Setup(m => m.GetConfig()).Returns(new DynDns53Config()
@@ -162,7 +163,7 @@ namespace DynDns53.UnitTests
             string zoneId = "ABCDEFGHI";
 
             var mockIpChecker = new Mock<IIpChecker>();
-            mockIpChecker.Setup(m => m.GetExternalIp()).Returns(currentExternalIp);
+            mockIpChecker.Setup(m => m.GetExternalIpAsync()).ReturnsAsync(currentExternalIp);
 
             var mockConfigHandler = new Mock<IConfigHandler>();
             mockConfigHandler.Setup(m => m.GetConfig()).Returns(new DynDns53Config()

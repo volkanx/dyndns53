@@ -5,21 +5,11 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DynDns53.CoreLib
+namespace DynDns53.CoreLib.IPChecker
 {
     public class AwsIpChecker : IIpChecker
     {
         private readonly string AWS_URL = "http://checkip.amazonaws.com";
-        
-        public string GetExternalIp()
-        {
-            using (var client = new HttpClient())
-            {
-                client.BaseAddress = new Uri(AWS_URL);
-                string result = client.GetStringAsync("").Result;
-                return result.TrimEnd('\n');
-            }
-        }
 
         public async Task<string> GetExternalIpAsync()
         {

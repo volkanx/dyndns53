@@ -3,59 +3,79 @@ using Amazon.Route53.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using DynDns53.CoreLib.IPChecker;
+using DynDns53.CoreLib.Config;
 
 namespace DynDns53.CoreLib
 {
     public interface IDnsUpdater
     {
-        Task UpdateAsync();
+        Task UpdateAllAsync(string ipAddress, IEnumerable<HostedDomainInfo> domainList);
+        Task UpdateSingleAsync(string ipAddress, HostedDomainInfo domain);
     }
 
     public class DnsUpdater : IDnsUpdater
     {
-        private readonly IConfigHandler _configHandler;
-        private readonly IIpChecker _ipChecker;
-        private readonly IAmazonRoute53 _amazonClient;
+        private readonly IAmazonRoute53 amazonClient;
 
-        public DnsUpdater(IConfigHandler configHandler, IIpChecker ipchecker, IAmazonRoute53 amazonClient)
+        public DnsUpdater(IAmazonRoute53 amazonClient)
         {
-            _configHandler = configHandler;
-            _ipChecker = ipchecker;
-            _amazonClient = amazonClient;
+            this.amazonClient = amazonClient;
         }
 
-        public async Task UpdateAsync()
+        public async Task UpdateAllAsync(string ipAddress, IEnumerable<HostedDomainInfo> domainList)
         {
-            var config = _configHandler.GetConfig();
-            string currentExternalIp = _ipChecker.GetExternalIp();
-
-            foreach (var domain in config.DomainList)
+            foreach (var domain in domainList)
             {
-                string subdomain = domain.DomainName;
-                string zoneId = domain.ZoneId;
+                await UpdateSingleAsync(ipAddress, domain);
+            }
+        }
 
-                var listResourceRecordSetsResponse = await _amazonClient.ListResourceRecordSetsAsync(new ListResourceRecordSetsRequest() { HostedZoneId = zoneId });
-                var resourceRecordSet = listResourceRecordSetsResponse.ResourceRecordSets.First(recordset => recordset.Name == subdomain);
-                var resourceRecord = resourceRecordSet.ResourceRecords.First();
+        public async Task UpdateSingleAsync(string ipAddress, HostedDomainInfo domain)
+        {
+            var currentExternalIp = ipAddress;
 
-                if (resourceRecord.Value != currentExternalIp)
+            // Ensure the domain name doesn't end with a dot. This is how they are returned from AWS API but they will be trimmed
+            // as well so that they match
+            var domainName = domain.DomainName;
+            domainName = domainName.TrimEnd(".".ToCharArray());
+
+            var zoneId = domain.ZoneId;
+
+            var listResourceRecordSetsResponse = await amazonClient.ListResourceRecordSetsAsync(new ListResourceRecordSetsRequest() { HostedZoneId = zoneId });
+            if (listResourceRecordSetsResponse.ResourceRecordSets.Count == 0)
+            {
+                throw new InvalidOperationException($"Could not find any ResourceRecordSets for zone: {zoneId}");
+            }
+
+            var resourceRecordSet = listResourceRecordSetsResponse.ResourceRecordSets.FirstOrDefault(recordset => recordset.Name.TrimEnd(".".ToCharArray()) == domainName);
+            if (resourceRecordSet == null)
+            {
+                throw new InvalidOperationException($"Could not find any resource record set for domain: {domainName}");
+            }
+
+            var resourceRecord = resourceRecordSet.ResourceRecords.FirstOrDefault();
+            if (resourceRecord == null)
+            {
+                throw new InvalidOperationException($"Could not find any resouce record in the set");
+            }
+
+            if (resourceRecord.Value != currentExternalIp)
+            {
+                resourceRecord.Value = currentExternalIp;
+
+                await amazonClient.ChangeResourceRecordSetsAsync(new ChangeResourceRecordSetsRequest()
                 {
-                    resourceRecord.Value = currentExternalIp;
-
-                    await _amazonClient.ChangeResourceRecordSetsAsync(new ChangeResourceRecordSetsRequest()
+                    HostedZoneId = zoneId,
+                    ChangeBatch = new ChangeBatch()
                     {
-                        HostedZoneId = zoneId,
-                        ChangeBatch = new ChangeBatch()
+                        Changes = new List<Change>()
                         {
-                            Changes = new List<Change>() 
-                            { 
-                                new Change(ChangeAction.UPSERT, resourceRecordSet)
-                            }
+                            new Change(ChangeAction.UPSERT, resourceRecordSet)
                         }
-                    });
-                }
+                    }
+                });
             }
         }
     }
