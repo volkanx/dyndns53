@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace DynDns53.CoreLib.IPChecker
 {
-    public class CustomIpChecker : IIpChecker
+    public class CustomIPCheckerStrategy : IIPCheckerStrategy
     {
         private readonly string SERVICE_URL = "http://check-ip.herokuapp.com/";
 

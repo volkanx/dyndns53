@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DynDns53.CoreLib.IPChecker
 {
-    public interface IIpChecker
+    public interface IIPCheckerStrategy
     {
         Task<string> GetExternalIpAsync();
     }

@@ -1,0 +1,8 @@
+version: '3'
+
+services:
+  dyndns53.client.dotnetcore:
+    image: dyndns53.client.dotnetcore
+    build:
+      context: ./DynDns53.Client.DotNetCore
+      dockerfile: Dockerfile

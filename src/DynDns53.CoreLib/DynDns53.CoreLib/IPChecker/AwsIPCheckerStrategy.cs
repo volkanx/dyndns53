@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DynDns53.CoreLib.IPChecker
 {
-    public class AwsIpChecker : IIpChecker
+    public class AwsIPCheckerStrategy : IIPCheckerStrategy
     {
         private readonly string AWS_URL = "http://checkip.amazonaws.com";
 

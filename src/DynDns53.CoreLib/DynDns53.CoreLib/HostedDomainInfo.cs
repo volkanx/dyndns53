@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DynDns53.CoreLib.Config
+namespace DynDns53.CoreLib
 {
     public class HostedDomainInfo
     {

@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DynDns53.CoreLib.IPChecker;
-using DynDns53.CoreLib.Config;
 
 namespace DynDns53.CoreLib
 {

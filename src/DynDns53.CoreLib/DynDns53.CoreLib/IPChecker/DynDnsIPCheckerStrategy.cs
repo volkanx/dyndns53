@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace DynDns53.CoreLib.IPChecker
 {
-    public class DynDnsIPChecker : IIpChecker
+    public class DynDnsIPCheckerStrategy : IIPCheckerStrategy
     {
         private readonly string DYNDNS_URL = "http://checkip.dyndns.org/";
 

@@ -1,80 +1,84 @@
 ﻿using System;
-using Fclp;
-using DynDns53.CoreLib;
 using Amazon.Route53;
 using System.Threading.Tasks;
 using SimpleInjector;
-using DynDns53.CoreLib.IPChecker;
 using Amazon;
+using CommandLine;
+using Newtonsoft.Json;
+using System.Linq;
+using CommandLine.Text;
 
 namespace DynDns53.Client.DotNetCore
 {
     class Program
     {
-       // static Container container;
+        static Container container;
 
-        public async Task StartUpdate(Configuration config)
-        {
-            var ipChecker = IpCheckerHelper.CreateIpChecker(IpCheckers.Custom);
-
-            // var route53Client = new AmazonRoute53Client(config.AccessKey, config.SecretKey, config.Region);
-
-            var route53Client = new AmazonRoute53Client("AKIAJBD2EYUNDLMG7HQA", 
-                                                        "1S0dIHu5wIgGivExGUApTGNdVNNbJwMCdItbZXOS", 
-                                                        RegionEndpoint.GetBySystemName("eu-west-1"));
-
-
-
-            var configHandler = new CommandLineConfigHandler(config);
-
-
-            var dynDns53 = new DnsUpdater(route53Client);
-
-            while (true)
-            {
-                Console.WriteLine("Updating DNS...");
-                var ipAddress = await ipChecker.GetExternalIpAsync();
-               // var config = configHandler.GetConfig();
-
-              //  await dynDns53.UpdateAllAsync(ipAddress, config.DomainList);
-
-                System.Threading.Thread.Sleep(5 * 1000);   
-
-            }
-
-
-            // Console.ReadLine();
-
-        }
-
-        /*
-        static async Task InitializeIOCContainer(Configuration config)
+        private void InitializeIOCContainer(Configuration config)
         {
             container = new Container();
 
-            container.Register<IAmazonRoute53, AmazonRoute53Client>();
+            container.Register<IAmazonRoute53>(() =>
+            { 
+                return new AmazonRoute53Client(config.AccessKey, config.SecretKey, RegionEndpoint.GetBySystemName("us-east-1")); 
+            }, Lifestyle.Singleton);
+
+            container.Register<IConfigHandler, JsonConfigHandler>();
 
             container.Verify();
         }
-        */
+
+        private Configuration ParseArguments(string[] args)
+        {
+            var parser = new Parser(with => with.EnableDashDash = true);
+            var parsedArgs = parser.ParseArguments<Configuration>(args);
+            return parsedArgs.MapResult(c => c,
+                                        errors =>
+                                        {
+                                            var errorMessage = $"Parsing of command line arguments has failed: {JsonConvert.SerializeObject(errors)}";
+                                            throw new FormatException(errorMessage);
+                                        });
+        }
+
+        private void PrintUsage()
+        {
+            Console.WriteLine("Usage: ");
+            Console.WriteLine("dotnet DynDns53.Client.DotNetCore.dll --AccessKey ACCESS_KEY --SecretKey SECRET_KEY --Domains zoneId1:domain1 zoneId2:domain2 [--Interval 300] [--IPChecker Custom]");
+            Console.WriteLine("AccessKey: Mandatory. AWS IAM Account Access Key with Route53 access");
+            Console.WriteLine("SecretKey: Mandatory. AWS IAM Account Secret Key with Route53 access");
+            Console.WriteLine("Domains: Mandatory. Domains to update the IP address. Format: zoneId1:domain1 zoneId2:domain2");
+            Console.WriteLine("Interval: Optional. Time to interval to run the updater. Default is 5 minutes (300 seconds)");
+            Console.WriteLine("IPChecker: Optional. The service to use to get public IP. Default is Custom. Can be AWS, DynDns or Custom");
+        }
 
         static async Task Main(string[] args)
         {
-            var config = new FluentCommandLineParser<Configuration>();
-            config.Setup(arg => arg.AccessKey).As('a', "accessKey");
-            config.Setup(arg => arg.AccessKey).As('s', "secretKey");
-            config.Setup(arg => arg.AccessKey).As('r', "region");
-
-
             var p = new Program();
 
-            Console.WriteLine(config.Object.AccessKey);
-            Console.WriteLine(config.Object.SecretKey);
-            Console.WriteLine(config.Object.Region);
+            if (args.Length == 0)
+            {
+                p.PrintUsage();
+                return;
+            }
 
-            // await InitializeIOCContainer(config.Object);
+            Configuration config;
+            try
+            {
+                config = p.ParseArguments(args);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                p.PrintUsage();
+                return;
+            }
 
-            await p.StartUpdate(config.Object);
+            p.InitializeIOCContainer(config);
+
+            var configHandler = container.GetInstance<IConfigHandler>();
+            var route53Client = container.GetInstance<IAmazonRoute53>();
+            var client = new DynDns53ConsoleClient(configHandler, route53Client);
+            await client.StartApplication(config);
         }
     }
 }

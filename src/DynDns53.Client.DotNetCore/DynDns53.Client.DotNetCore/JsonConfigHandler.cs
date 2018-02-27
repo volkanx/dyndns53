@@ -8,7 +8,14 @@ using DynDns53.CoreLib;
 
 namespace DynDns53.Client.DotNetCore
 {
-    public class JsonConfigHandler //: IConfigHandler
+    public interface IConfigHandler
+    {
+        Configuration GetConfig();
+        void SaveConfig(Configuration config);
+        void VerifyConfig(Configuration updatedConfig);
+    }
+
+    public class JsonConfigHandler : IConfigHandler
     {
         private readonly string configName = "config.json";
 
@@ -23,6 +30,24 @@ namespace DynDns53.Client.DotNetCore
         {
             var configAsJson = Newtonsoft.Json.JsonConvert.SerializeObject(config);
             File.WriteAllText(configName, configAsJson);
+        }
+
+        public void VerifyConfig(Configuration updatedConfig)
+        {
+            if (string.IsNullOrWhiteSpace(updatedConfig.AccessKey))
+            {
+                throw new ArgumentException("AccessKey is not supplied");
+            }
+
+            if (string.IsNullOrWhiteSpace(updatedConfig.SecretKey))
+            {
+                throw new ArgumentException("SecretKey is not supplied");
+            }
+
+            if (updatedConfig.RawDomainList == null || !updatedConfig.RawDomainList.Any())
+            {
+                throw new ArgumentException("At least 1 domain must be supplied");
+            }
         }
     }
 }

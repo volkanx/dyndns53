@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using DynDns53.CoreLib;
 using Moq;
 using Xunit;
-using DynDns53.CoreLib.Config;
 using Amazon.Route53;
 using Amazon.Route53.Model;
 using System.Threading;
@@ -24,22 +23,14 @@ namespace DynDns53.UnitTests
             string currentRecordedIp = "5.6.7.8";
             string subdomain = "test.example.com";
             string zoneId = "ABCD123456";
-
-            var mockIpChecker = new Mock<IIpChecker>();
-            mockIpChecker.Setup(m => m.GetExternalIpAsync()).ReturnsAsync(currentExternalIp);
-
-            var mockConfigHandler = new Mock<IConfigHandler>();
-            mockConfigHandler.Setup(m => m.GetConfig()).Returns(new DynDns53Config()
+            var domain = new HostedDomainInfo()
             {
-                DomainList = new List<HostedDomainInfo>()
-                {
-                    new HostedDomainInfo() { DomainName = subdomain, ZoneId = zoneId }
-                }
-            });
+                ZoneId = zoneId,
+                DomainName = subdomain
+            };
 
             var mockAmazonClient = new Mock<IAmazonRoute53>();
-            mockAmazonClient.Setup(m =>
-                                   m.ListResourceRecordSetsAsync(It.IsAny<ListResourceRecordSetsRequest>(), CancellationToken.None))
+            mockAmazonClient.Setup(m => m.ListResourceRecordSetsAsync(It.IsAny<ListResourceRecordSetsRequest>(), CancellationToken.None))
                 .ReturnsAsync(new ListResourceRecordSetsResponse()
                 {
                     ResourceRecordSets = new List<ResourceRecordSet>()
@@ -52,10 +43,10 @@ namespace DynDns53.UnitTests
                     }
                 });
 
-            var dnsUpdater = new DnsUpdater(mockConfigHandler.Object, mockIpChecker.Object, mockAmazonClient.Object);
+            var dnsUpdater = new DnsUpdater(mockAmazonClient.Object);
 
             // Act
-            await dnsUpdater.UpdateAsync();
+            await dnsUpdater.UpdateSingleAsync(currentExternalIp, domain);
             
             // Assert
             mockAmazonClient.Verify(m => m.ChangeResourceRecordSetsAsync(It.Is<ChangeResourceRecordSetsRequest>(c => c.ChangeBatch.Changes.Count == 1), CancellationToken.None), Times.Once);
@@ -70,18 +61,11 @@ namespace DynDns53.UnitTests
             string currentRecordedIp = "1.2.3.4";
             string subdomain = "test.example.com";
             string zoneId = "ABCD123456";
-
-            var mockIpChecker = new Mock<IIpChecker>();
-            mockIpChecker.Setup(m => m.GetExternalIpAsync()).ReturnsAsync(currentExternalIp);
-            
-            var mockConfigHandler = new Mock<IConfigHandler>();
-            mockConfigHandler.Setup(m => m.GetConfig()).Returns(new DynDns53Config()
+            var domain = new HostedDomainInfo()
             {
-                DomainList = new List<HostedDomainInfo>() 
-                {
-                    new HostedDomainInfo() { DomainName = subdomain, ZoneId = zoneId }
-                }
-            });
+                ZoneId = zoneId,
+                DomainName = subdomain
+            };
 
             var mockAmazonClient = new Mock<IAmazonRoute53>();
             mockAmazonClient.Setup(m => m.ListResourceRecordSetsAsync(It.IsAny<ListResourceRecordSetsRequest>(), CancellationToken.None))
@@ -97,14 +81,15 @@ namespace DynDns53.UnitTests
                     }
                 });
 
-            var dnsUpdater = new DnsUpdater(mockConfigHandler.Object, mockIpChecker.Object, mockAmazonClient.Object);
+            var dnsUpdater = new DnsUpdater(mockAmazonClient.Object);
 
             // Act
-            await dnsUpdater.UpdateAsync();
+            await dnsUpdater.UpdateSingleAsync(currentExternalIp, domain);
 
             // Assert
             mockAmazonClient.Verify(m => m.ChangeResourceRecordSetsAsync(It.IsAny<ChangeResourceRecordSetsRequest>(), CancellationToken.None), Times.Never);
         }
+
 
         [Fact]
         public async Task UpdateDns_MultipleDomainsCorrectExistingIp_ShouldUpdateAllSubdomains()
@@ -112,17 +97,13 @@ namespace DynDns53.UnitTests
             // Arrange
             string currentExternalIp = "5.6.7.8";
             string currentRecordedIp = "1.2.3.4";
-            List<string> subDomainList = new List<string>() { "subdomain1.example.com", "subdomain2.example.com" };
+            var subDomainList = new List<string>() { "subdomain1.example.com", "subdomain2.example.com" };
             string zoneId = "ABCDEFGHI";
-
-            var mockIpChecker = new Mock<IIpChecker>();
-            mockIpChecker.Setup(m => m.GetExternalIpAsync()).ReturnsAsync(currentExternalIp);
-
-            var mockConfigHandler = new Mock<IConfigHandler>();
-            mockConfigHandler.Setup(m => m.GetConfig()).Returns(new DynDns53Config()
+            var domainList = new List<HostedDomainInfo>()
             {
-                DomainList = subDomainList.Select(s => new HostedDomainInfo() { DomainName = s, ZoneId = zoneId }).ToList()
-            });
+                new HostedDomainInfo() { DomainName = subDomainList[0], ZoneId = zoneId },
+                new HostedDomainInfo() { DomainName = subDomainList[1], ZoneId = zoneId }
+            };
 
             var mockAmazonClient = new Mock<IAmazonRoute53>();
             mockAmazonClient.Setup(m => m.ListResourceRecordSetsAsync(It.IsAny<ListResourceRecordSetsRequest>(), CancellationToken.None))
@@ -143,10 +124,10 @@ namespace DynDns53.UnitTests
                     }
                 });
 
-            var dnsUpdater = new DnsUpdater(mockConfigHandler.Object, mockIpChecker.Object, mockAmazonClient.Object);
+            var dnsUpdater = new DnsUpdater(mockAmazonClient.Object);
 
             // Act
-            await dnsUpdater.UpdateAsync();
+            await dnsUpdater.UpdateAllAsync(currentExternalIp, domainList);
 
             // Assert
             mockAmazonClient.Verify(m => m.ChangeResourceRecordSetsAsync(It.Is<ChangeResourceRecordSetsRequest>(c => c.ChangeBatch.Changes.Count == 1), CancellationToken.None), Times.Exactly(2));
@@ -159,17 +140,13 @@ namespace DynDns53.UnitTests
             // Arrange
             string currentExternalIp = "1.2.3.4";
             string currentRecordedIp = "1.2.3.4";
-            List<string> subDomainList = new List<string>() { "subdomain1.example.com", "subdomain2.example.com" };
+            var subDomainList = new List<string>() { "subdomain1.example.com", "subdomain2.example.com" };
             string zoneId = "ABCDEFGHI";
-
-            var mockIpChecker = new Mock<IIpChecker>();
-            mockIpChecker.Setup(m => m.GetExternalIpAsync()).ReturnsAsync(currentExternalIp);
-
-            var mockConfigHandler = new Mock<IConfigHandler>();
-            mockConfigHandler.Setup(m => m.GetConfig()).Returns(new DynDns53Config()
+            var domainList = new List<HostedDomainInfo>()
             {
-                DomainList = subDomainList.Select(s => new HostedDomainInfo() { DomainName = s, ZoneId = zoneId }).ToList()
-            });
+                new HostedDomainInfo() { DomainName = subDomainList[0], ZoneId = zoneId },
+                new HostedDomainInfo() { DomainName = subDomainList[1], ZoneId = zoneId }
+            };
 
             var mockAmazonClient = new Mock<IAmazonRoute53>();
             mockAmazonClient.Setup(m => m.ListResourceRecordSetsAsync(It.IsAny<ListResourceRecordSetsRequest>(), CancellationToken.None))
@@ -190,18 +167,15 @@ namespace DynDns53.UnitTests
                     }
                 });
 
-            var dnsUpdater = new DnsUpdater(mockConfigHandler.Object, mockIpChecker.Object, mockAmazonClient.Object);
+            var dnsUpdater = new DnsUpdater(mockAmazonClient.Object);
 
             // Act
-            await dnsUpdater.UpdateAsync();
+            await dnsUpdater.UpdateAllAsync(currentExternalIp, domainList);
 
             // Assert
             mockAmazonClient.Verify(m => m.ChangeResourceRecordSetsAsync(It.Is<ChangeResourceRecordSetsRequest>(c => c.ChangeBatch.Changes.Count == 1), CancellationToken.None), Times.Never);
             mockAmazonClient.Verify(m => m.ChangeResourceRecordSetsAsync(It.Is<ChangeResourceRecordSetsRequest>(c => c.ChangeBatch.Changes.First().ResourceRecordSet.ResourceRecords.First().Value == currentExternalIp), CancellationToken.None), Times.Never);
         }
-
-
-
     }
 
 
