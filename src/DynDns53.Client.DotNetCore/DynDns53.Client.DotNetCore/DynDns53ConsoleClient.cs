@@ -24,14 +24,13 @@ namespace DynDns53.Client.DotNetCore
             try
             {
                 configHandler.VerifyConfig(config);
+                await StartUpdate(config);
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
                 return;
             }
-
-            await StartUpdate(config);
         }
 
         public async Task StartUpdate(Configuration config)
