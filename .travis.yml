@@ -1,2 +1,7 @@
 language: csharp
-solution: DynDns53.CoreLib.sln
+mono: none
+dotnet: 2.0.0
+script:
+  - dotnet restore
+  - dotnet build ./src/DynDns53.CoreLib
+  - dotnet test ./src/DynDns53.CoreLib.UnitTests
