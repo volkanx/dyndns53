@@ -1,0 +1,2 @@
+language: csharp
+solution: DynDns53.CoreLib.sln
