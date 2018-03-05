@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+  <configSections>
+    <section name="awsSettings" type="DynDns53.Core.AwsSettings, DynDns53.Client.Wpf" />
+    <section name="domainSettings" type="DynDns53.Core.DomainSettings, DynDns53.Client.Wpf" />
+  </configSections>
+  <awsSettings route53AccessKey="{ACCESS_KEY}" route53SecretKey="{SECRET_KEY}" />
+  <domainSettings>
+    <add subDomain="{DOMAIN_NAME}" zoneId="{ZONE_ID}" />
+  </domainSettings>
+  <appSettings>
+    <add key="UpdateInterval" value="300" />
+    <add key="RunAtSystemStart" value="true" />
+    <add key="IPChecker" value="Custom" />
+  </appSettings>
+</configuration>

@@ -1,0 +1,36 @@
+﻿<Window x:Class="DynDns53.UI.SettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DynDns53.UI"
+        mc:Ignorable="d"
+        Title="Settings" Height="384.678" Width="511.571" Loaded="Window_Loaded">
+
+    <Grid>
+        <Label x:Name="label" Content="Update interval:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="131"/>
+        <TextBox x:Name="updateIntervalTextBox" HorizontalAlignment="Left" Height="23" Margin="137,13,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="47"/>
+        <Button x:Name="cancelButton" Content="Cancel" HorizontalAlignment="Left" VerticalAlignment="Top" Width="227" Margin="255,306,0,0" Click="cancelButton_Click" Height="39" FontFamily="Tahoma" FontSize="16"/>
+        <Button x:Name="saveButton" Content="Save" HorizontalAlignment="Left" VerticalAlignment="Top" Width="224" RenderTransformOrigin="1.733,12" Margin="10,306,0,0" Click="saveButton_Click" Height="39" FontFamily="Tahoma" FontSize="16" />
+        <Label x:Name="label_Copy" Content="Route 53 Access Key:" HorizontalAlignment="Left" Margin="10,43,0,0" VerticalAlignment="Top" Width="142"/>
+        <TextBox x:Name="accessKeyTextBox" HorizontalAlignment="Left" Height="23" Margin="137,43,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="345"/>
+        <Label x:Name="label_Copy1" Content="Route 53 Secret Key:" HorizontalAlignment="Left" Margin="10,74,0,0" VerticalAlignment="Top" Width="142"/>
+        <TextBox x:Name="secretKeyTextBox" HorizontalAlignment="Left" Height="23" Margin="137,74,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="345"/>
+        <Label x:Name="label_Copy2" Content="Domain List:" HorizontalAlignment="Left" Margin="10,145,0,0" VerticalAlignment="Top" Width="142"/>
+        <Label x:Name="label_Copy3" Content="seconds" HorizontalAlignment="Left" Margin="239,10,0,0" VerticalAlignment="Top" Width="131"/>
+        <ListView x:Name="domainsListView" HorizontalAlignment="Left" Height="100" Margin="137,145,0,0" VerticalAlignment="Top" Width="345" SelectionChanged="domainsListView_SelectionChanged">
+            <ListView.View>
+                <GridView AllowsColumnReorder="False">
+                    <GridViewColumn Header="Domain name" DisplayMemberBinding="{Binding DomainName}" Width="225"/>
+                    <GridViewColumn Header="Zone ID" DisplayMemberBinding="{Binding ZoneId}" Width="100">
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <Label x:Name="label_Copy4" Content="Run at system start:" HorizontalAlignment="Left" Margin="10,111,0,0" VerticalAlignment="Top" Width="142"/>
+        <CheckBox x:Name="runAtStartCheckBox" Content="" HorizontalAlignment="Left" Margin="137,116,0,0" VerticalAlignment="Top"/>
+        <Button x:Name="addDomainButton" Content="Add" HorizontalAlignment="Left" Margin="137,250,0,0" VerticalAlignment="Top" Width="75" Click="addDomainButton_Click"/>
+        <Button x:Name="deleteDomainButton" Content="Delete" HorizontalAlignment="Left" Margin="217,250,0,0" VerticalAlignment="Top" Width="75" Click="deleteDomainButton_Click" IsEnabled="False"/>
+
+    </Grid>
+</Window>

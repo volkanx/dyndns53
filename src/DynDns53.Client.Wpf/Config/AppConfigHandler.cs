@@ -28,10 +28,10 @@ namespace DynDns53.Core
             var awsConfigSection = configFile.GetSection("awsSettings");
             _config.UpdateInterval = int.Parse(ConfigurationManager.AppSettings["UpdateInterval"]);
             _config.ClientId = ConfigurationManager.AppSettings["ClientId"];
+            _config.IPChecker = (IPChecker) Enum.Parse(typeof(IPChecker), ConfigurationManager.AppSettings["IPChecker"]);
             _config.Route53AccessKey = awsConfigSection.ElementInformation.Properties["route53AccessKey"].Value.ToString();
             _config.Route53SecretKey = awsConfigSection.ElementInformation.Properties["route53SecretKey"].Value.ToString();
             _config.RunAtSystemStart = bool.Parse(ConfigurationManager.AppSettings["RunAtSystemStart"]);
-            _config.IPChecker = (IPChecker)Enum.Parse(typeof(IPChecker), ConfigurationManager.AppSettings["IPChecker"]);
 
             _config.DomainList = new List<HostedDomainInfo>();
             var domainConfigSection = configFile.GetSection("domainSettings") as DomainSettings;
@@ -68,7 +68,6 @@ namespace DynDns53.Core
             awsConfigSection.ElementInformation.Properties["route53AccessKey"].Value = config.Route53AccessKey;
             awsConfigSection.ElementInformation.Properties["route53SecretKey"].Value = config.Route53SecretKey;
             
-
             // Domain info
             var domainConfigSection = configFile.GetSection("domainSettings") as DomainSettings;
             domainConfigSection.SectionInformation.ForceSave = true;
