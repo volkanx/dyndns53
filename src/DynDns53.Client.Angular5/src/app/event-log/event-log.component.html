@@ -1,0 +1,13 @@
+<div class="img-rounded alt-div-color2">
+  <h3>Event Log</h3>
+  <div class="container">
+    <div class="row">
+      <textarea rows="{{numberOfLogEntries}}" cols="180"
+      value="{{logString}}"></textarea>
+
+    </div>
+    <div class="row">
+      <input type="button" value="Clear event log" (click)="clearLog()" class="btn-primary" />
+    </div>
+  </div>
+</div>

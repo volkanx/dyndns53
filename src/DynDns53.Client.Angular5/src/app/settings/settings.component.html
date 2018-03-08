@@ -1,0 +1,54 @@
+<div class="img-rounded alt-div-color2">
+  <h3>Settings</h3>
+  <form name="settingsForm" (ngSubmit)="saveValues()" novalidate formValidator>
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-2"><label>Update interval:</label></div>
+        <div class="col-sm-10">
+          <input type="number" name="updateInterval" [(ngModel)]="settings.updateInterval" class="input" maxlength=4 min=1 step=1 required="required" /> &nbsp;minutes
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-2"><label>Route53 Access Key:</label></div>
+        <div class="col-sm-10">
+          <input type="text" name="accessKey" ng-model="$root.accessKey" placeholder="AWS Access Key with Route53 access" size="50" required="required" />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-2"><label>Route53 Secret Key:</label></div>
+        <div class="col-sm-10">
+          <input type="text" name="secretKey" ng-model="$root.secretKey" placeholder="AWS Secret Key with Route53 access" size="50" required="required" />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-2"><label>Max log lines to keep:</label></div>
+        <div class="col-sm-10">
+            <input type="number" name="maxLogRowCount" ng-model="$root.maxLogRowCount" class="input" maxlength=4 min=1 step=1 required="required" />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-2"><label>Domain List:</label></div>
+        <div class="col-sm-10">
+          <table>
+            <thead><tr><th>Domain Name</th><th>Zone ID</th><th></th></tr></thead>
+            <tbody>
+              <tr ng-repeat="domain in domainList.domains track by $index">
+                  <td><input type="text" ng-model="domain.name" required="required" ng-change="domainsUpdated()" /></td>
+                  <td><input type="text" ng-model="domain.zoneId" required="required" ng-change="domainsUpdated()" /></td>
+                  <td>
+                    <span class="field-tip">
+                      <img src="assets/img/cancel_16x16.png" ng-click="deleteDomain($index)" />
+                      <span class="tip-content">Remove this domain from the list</span>
+                    </span>
+                  </td>
+              </tr>
+            </tbody>
+          </table>
+          <input type="hidden" name="domainListHidden" ng-model="domainList" domain-list-checks>
+          <input type="button" value="Add domain" class="btn-success" ng-click="addDomain()" />
+        </div>
+      </div>
+    </div>
+    <input type="submit" value="Save Settings" class="btn-primary" ng-disabled="settingsForm.$invalid" />
+  </form>
+</div>
