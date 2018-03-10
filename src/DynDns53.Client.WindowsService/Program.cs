@@ -18,7 +18,7 @@ namespace DynDns53.Service
         {
             var configHandler = new AppConfigHandler();
             var config = configHandler.GetConfig();
-            var ipChecker = IPCheckerHelper.CreateIPChecker(config.IPChecker);
+            var ipChecker = config.IPChecker;
             var route53Client = new AmazonRoute53Client(config.Route53AccessKey, config.Route53SecretKey, RegionEndpoint.EUWest1);
             var dnsUpdater = new DnsUpdater(route53Client);
 

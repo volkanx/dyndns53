@@ -44,8 +44,8 @@
     <Reference Include="AWSSDK.Route53, Version=3.3.0.0, Culture=neutral, PublicKeyToken=885c28607f98e604, processorArchitecture=MSIL">
       <HintPath>packages\AWSSDK.Route53.3.3.15.1\lib\net45\AWSSDK.Route53.dll</HintPath>
     </Reference>
-    <Reference Include="DynDns53.CoreLib, Version=1.0.10.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\DynDns53.CoreLib.1.0.10\lib\netstandard2.0\DynDns53.CoreLib.dll</HintPath>
+    <Reference Include="DynDns53.CoreLib, Version=1.0.12.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\DynDns53.CoreLib.1.0.12\lib\netstandard2.0\DynDns53.CoreLib.dll</HintPath>
     </Reference>
     <Reference Include="Hardcodet.Wpf.TaskbarNotification, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\Hardcodet.NotifyIcon.Wpf.1.0.8\lib\net45\Hardcodet.Wpf.TaskbarNotification.dll</HintPath>
@@ -80,9 +80,6 @@
     <Compile Include="Config\AppConfigHandler.cs" />
     <Compile Include="Config\AwsSettings.cs" />
     <Compile Include="Config\DomainSettings.cs" />
-    <Compile Include="Config\DynDns53Config.cs" />
-    <Compile Include="Config\IConfigHandler.cs" />
-    <Compile Include="Config\JsonConfigHandler.cs" />
     <Compile Include="SettingsWindow.xaml.cs">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
     </Compile>

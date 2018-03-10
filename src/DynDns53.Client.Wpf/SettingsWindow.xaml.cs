@@ -1,5 +1,6 @@
 ﻿using DynDns53.Core;
 using DynDns53.CoreLib;
+using DynDns53.CoreLib.Config;
 using System;
 using System.Collections.Generic;
 using System.Configuration;

@@ -4,8 +4,8 @@
 using Amazon;
 using Amazon.Route53;
 using DynDns53.Core;
-using DynDns53.Core.Config;
 using DynDns53.CoreLib;
+using DynDns53.CoreLib.Config;
 using DynDns53.CoreLib.IPChecker;
 using Hardcodet.Wpf.TaskbarNotification;
 using Microsoft.Win32;
@@ -55,7 +55,7 @@ namespace DynDns53.UI
 
             _configHandler = new AppConfigHandler();
             _config = _configHandler.GetConfig();
-            _ipChecker = IPCheckerHelper.CreateIPChecker(_config.IPChecker);
+            _ipChecker = _config.IPChecker;
 
             var _amazonClient = new AmazonRoute53Client(_config.Route53AccessKey, _config.Route53SecretKey, RegionEndpoint.USEast1);
 

@@ -1,4 +1,5 @@
 ﻿using DynDns53.CoreLib;
+using DynDns53.CoreLib.Config;
 using DynDns53.CoreLib.IPChecker;
 using System;
 using System.Collections.Generic;
@@ -28,7 +29,7 @@ namespace DynDns53.Core
             var awsConfigSection = configFile.GetSection("awsSettings");
             _config.UpdateInterval = int.Parse(ConfigurationManager.AppSettings["UpdateInterval"]);
             _config.ClientId = ConfigurationManager.AppSettings["ClientId"];
-            _config.IPChecker = (IPChecker) Enum.Parse(typeof(IPChecker), ConfigurationManager.AppSettings["IPChecker"]);
+            _config.IPChecker = IPCheckerHelper.CreateIPChecker((IPChecker) Enum.Parse(typeof(IPChecker), ConfigurationManager.AppSettings["IPChecker"]));
             _config.Route53AccessKey = awsConfigSection.ElementInformation.Properties["route53AccessKey"].Value.ToString();
             _config.Route53SecretKey = awsConfigSection.ElementInformation.Properties["route53SecretKey"].Value.ToString();
             _config.RunAtSystemStart = bool.Parse(ConfigurationManager.AppSettings["RunAtSystemStart"]);
