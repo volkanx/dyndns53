@@ -17,7 +17,7 @@
     <PackageReference Include="FluentScheduler" Version="5.3.0" />
     <PackageReference Include="SimpleInjector" Version="4.0.12" />
     <PackageReference Include="CommandLineParser" Version="2.2.1" />
-    <PackageReference Include="DynDns53.CoreLib" Version="1.0.10" />
+    <PackageReference Include="DynDns53.CoreLib" Version="1.0.12" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="InvalidConfigurationException.cs" />

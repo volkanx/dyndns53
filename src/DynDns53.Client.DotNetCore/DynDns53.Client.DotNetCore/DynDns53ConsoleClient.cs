@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Amazon;
 using Amazon.Route53;
 using DynDns53.CoreLib;
+using DynDns53.CoreLib.Config;
 using DynDns53.CoreLib.IPChecker;
 
 namespace DynDns53.Client.DotNetCore
@@ -23,7 +24,7 @@ namespace DynDns53.Client.DotNetCore
         {
             try
             {
-                configHandler.VerifyConfig(config);
+           //     configHandler.VerifyConfig(config);
                 await StartUpdate(config);
             }
             catch (Exception ex)
