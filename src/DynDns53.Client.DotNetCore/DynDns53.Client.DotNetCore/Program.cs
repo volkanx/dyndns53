@@ -7,6 +7,7 @@ using CommandLine;
 using Newtonsoft.Json;
 using System.Linq;
 using CommandLine.Text;
+using DynDns53.CoreLib.Config;
 
 namespace DynDns53.Client.DotNetCore
 {
