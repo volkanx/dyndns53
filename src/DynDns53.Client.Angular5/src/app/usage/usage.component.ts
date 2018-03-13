@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { LogService } from '../log.service';
-import { SettingsService } from '../settings.service';
+import { LogService } from '../services/log.service';
+import { SettingsService } from '../services/settings.service';
+import { Settings } from '../models//settings';
 
 @Component({
   selector: 'app-usage',
@@ -30,8 +31,10 @@ export class UsageComponent implements OnInit {
     this.toggleUsageButtonText = (this.showUsage) ? 'Hide usage' : 'Show usage';
 
     const settings = this.settingsService.getSettings();
-    settings.showUsage = this.showUsage;
-    this.settingsService.saveSettings(settings);
+    if (settings) {
+      settings.showUsage = this.showUsage;
+      this.settingsService.saveSettings(settings);
+    }
   }
 
 }

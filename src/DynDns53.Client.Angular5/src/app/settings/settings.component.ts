@@ -1,14 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { SettingsService } from '../settings.service';
-import { LogService } from '../log.service';
-import { Settings } from '../settings';
-import { HostedDomainInfo } from '../settings';
+import { SettingsService } from '../services/settings.service';
+import { LogService } from '../services/log.service';
+import { Settings } from '../models/settings';
+import { HostedDomainInfo } from '../models/settings';
 
 @Component({
   selector: 'app-settings',
   templateUrl: './settings.component.html',
   styleUrls: ['./settings.component.css']
 })
+
 export class SettingsComponent implements OnInit {
 
   settings: Settings;
@@ -22,28 +23,25 @@ export class SettingsComponent implements OnInit {
 
   loadValues(): void {
     this.logService.addMessage('Loading configuration values from the local storage');
-    this.settings = this.settingsService.getSettings();
- }
+    const tempSettings = this.settingsService.getSettings();
+    if (tempSettings) {
+      this.settings = tempSettings;
+    }
+  }
 
- saveValues(): void {
-    this.settingsService.saveSettings(this.settings);
-    this.logService.addMessage('Saved configuration values to the local storage');
- }
+  saveValues(): void {
+    if (this.settings) {
+      this.settingsService.saveSettings(this.settings);
+      this.logService.addMessage('Saved configuration values to the local storage');
+    }
+  }
 
- addDomain(zoneId, domainName): void {
-    const settings = this.settingsService.getSettings();
-    const hostedDomainInfo = new HostedDomainInfo(zoneId, domainName);
-    settings.domainList.push(hostedDomainInfo);
-    this.settingsService.saveSettings(this.settings);
-    this.logService.addMessage('New domain has been added. Restarting DNS update.');
- }
+  addDomain(domainName: string, zoneId: string): void {
+      const hostedDomainInfo = new HostedDomainInfo(zoneId, domainName);
+      this.settings.domainList.push(hostedDomainInfo);
+  }
 
- deleteDomain(): void {
-
- }
-
- domainsUpdated(): void {
-
- }
-
+  deleteDomain(index: number): void {
+    this.settings.domainList.splice(index, 1);
+  }
 }

@@ -5,12 +5,14 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
 import { UsageComponent } from './usage/usage.component';
 import { SettingsComponent } from './settings/settings.component';
-import { LocalStorageService } from './local-storage.service';
-import { LogService } from './log.service';
+import { LocalStorageService } from './services/local-storage.service';
+import { LogService } from './services/log.service';
 import { EventLogComponent } from './event-log/event-log.component';
-import { SettingsService } from './settings.service';
+import { SettingsService } from './services/settings.service';
 import { UpdateComponent } from './update/update.component';
-
+import { ExternalIpService } from './services/external-ip.service';
+import { HttpClientModule } from '@angular/common/http';
+import { TimerService } from './services/timer.service';
 
 @NgModule({
   declarations: [
@@ -22,12 +24,15 @@ import { UpdateComponent } from './update/update.component';
   ],
   imports: [
     BrowserModule,
-    FormsModule
+    FormsModule,
+    HttpClientModule
   ],
   providers: [
     LocalStorageService,
     LogService,
-    SettingsService
+    SettingsService,
+    ExternalIpService,
+    TimerService
   ],
   bootstrap: [AppComponent]
 })

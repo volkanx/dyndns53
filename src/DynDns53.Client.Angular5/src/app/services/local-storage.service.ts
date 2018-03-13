@@ -5,17 +5,16 @@ export class LocalStorageService {
 
   constructor() { }
 
-  setData(key, val): void {
+  setData(key: string, val: string): void {
     if (window.localStorage) {
       window.localStorage.setItem(key, val);
     }
   }
 
-  getData(key): string {
+  getData(key: string): string | null {
     if (window.localStorage) {
       return window.localStorage.getItem(key);
     }
     return null;
   }
-
 }

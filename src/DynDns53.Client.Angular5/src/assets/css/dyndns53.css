@@ -20,7 +20,7 @@ h1, h2, h3, h4, h5, h6 {
 
 input[type=number] {
     width: 40px;
-} 
+}
 
 .alt-div-color1 {
 	background-color: #fdb506;
@@ -42,9 +42,10 @@ input[type=number] {
 
 
 .information {
-	font-family: "Times New Roman", Times, serif;
- 	font-style: normal;
- 	font-size: 18px;
+   font-family: "Times New Roman", Times, serif;
+   font-style: normal;
+   font-size: 18px;
+   padding: 10px;
 }
 
 .copyright {

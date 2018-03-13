@@ -6,7 +6,8 @@ export class LogService {
 
   messages: BehaviorSubject<string> = new BehaviorSubject<string>('');
 
-  constructor() { }
+  constructor() {
+  }
 
   addMessage(message: string) {
     const logLine = new Date().toTimeString() + '\t' + message;

@@ -1,25 +1,41 @@
-<div class="row">
-    <button type="button" class="btn btn-info" (click)="toggleUsage()">{{ toggleUsageButtonText }}</button>
-</div>
+<div class="container img-rounded alt-div-color1">
 
-<div class="row collapse" [ngClass]="{'show': (showUsage === true)}">
+  <div class="row">
+    <button type="button" class="btn btn-info" (click)="toggleUsage()">{{ toggleUsageButtonText }}</button>
+  </div>
+
+  <div class="row collapse" [ngClass]="{'show': (showUsage === true)}">
     <h3>Usage</h3>
     <div class="row">
-      <div class="col-sm-2"><img src="assets/img/information.png" width="128" height="128" /></div>
-      <div class="col-sm-10 information">
+      <div class="col-sm-1"><img src="assets/img/information.png" width="64" height="64" style="margin-left: 10px;" /></div>
+      <div class="col-sm-11 information">
           <p>DynDns53 is a dynamic DNS tool running on your browser that doesn't require any software installation. To be able to use DynDns53, you'd need an AWS account.</p>
-          <b>AWS Setup:</b>
+          <h4>AWS Setup</h4>
           <div>
             <ol>
               <li>Create an IAM account with Route 53 access. The IAM user must have rights to run route53:ListResourceRecordSets and route53:ChangeResourceRecordSets actions. You can use the sample policy below:
 
-                <div>sample JSON policy goes here </div>
+                <pre style="background-color: #FFFFCC; margin: 10px; padding: 10px;"><![CDATA[
+{
+  "Version": "2012-10-17",
+  "Statement": [
+      {
+          "Effect": "Allow",
+          "Action": [
+              "route53:ListResourceRecordSets",
+              "route53:ChangeResourceRecordSets"
+          ],
+          "Resource": "arn:aws:route53:::hostedzone/{ZONE ID}"
+      }
+  ]
+}
+                  ]]></pre>
 
               </li>
-              <li>Create at least one A record for the domain or subdomain</li>
+              <li>Create at least one A record for the domain you want to update.</li>
             </ol>
           </div>
-          <b>DynsDns53 Setup:</b>
+          <h4>DynsDns53 Setup</h4>
           <div>
             <ol>
               <li>Enter your AWS access and secret key.</li>
@@ -28,7 +44,9 @@
               <li>Press <i>Start auto-update</i> button. As long as you keep the window open in your browser the domains will be updated with your current external IP address.</li>
             </ol>
           </div>
-          <p><b>Please note, your keys never leave your browser. Everything is stored locally. If you switch browsers or go incognito, you'll have to re-enter the settings.</b></p>
+          <p style="margin: 10px;"><b>Please note, your keys never leave your browser. Everything is stored locally. If you switch browsers or go incognito, you'll have to re-enter the settings.</b></p>
       </div>
     </div>
   </div>
+
+</div>

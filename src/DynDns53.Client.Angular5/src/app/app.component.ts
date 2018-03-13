@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { SettingsService } from './services/settings.service';
 
 @Component({
   selector: 'app-root',
@@ -6,5 +7,10 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'app';
+  title = 'DynDns53 | AWS Route53-Based Dynamic DNS Tool';
+
+  constructor(private settingsService: SettingsService) {
+    settingsService.initSettings();
+  }
+
 }

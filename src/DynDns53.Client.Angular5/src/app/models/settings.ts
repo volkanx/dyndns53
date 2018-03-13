@@ -11,7 +11,7 @@ export class HostedDomainInfo {
   zoneId: string;
   domainName: string;
 
-  constructor (zoneId, domainName) {
+  constructor (zoneId: string, domainName: string) {
     this.zoneId = zoneId;
     this.domainName = domainName;
   }

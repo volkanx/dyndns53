@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { LogService } from '../log.service';
-import { SettingsService } from '../settings.service';
+import { LogService } from '../services/log.service';
+import { SettingsService } from '../services/settings.service';
 
 @Component({
   selector: 'app-event-log',
@@ -16,7 +16,13 @@ export class EventLogComponent implements OnInit {
   constructor(private logService: LogService, private settingsService: SettingsService) { }
 
   ngOnInit() {
-    this.numberOfLogEntries = this.settingsService.getNumberOfLogEntries();
+    const settings = this.settingsService.getSettings();
+    if (settings) {
+      this.numberOfLogEntries = settings.numberOfLogEntries;
+    } else {
+      const logMessage = 'ERROR: Couldn\'t retrieve settings.';
+      this.logService.addMessage(logMessage);
+    }
 
     this.logService.getMessages().subscribe(message => {
       this.logs.unshift(message);
@@ -30,7 +36,7 @@ export class EventLogComponent implements OnInit {
     this.logString = '';
   }
 
-  sendMessage(message): void {
+  sendMessage(message: string): void {
     this.logService.addMessage(message);
   }
 }

@@ -1,13 +1,15 @@
 <div class="img-rounded alt-div-color1">
   <h3>Update DNS</h3>
-  <input type="button" value="Update IP now" (click)="updateTest()" class="btn-primary" />
-  <input type="button" value="{{ this.updating ? 'Stop auto-update' : 'Start auto-update' }}"
-         ng-click="toggleAutoUpdate()"
-         class="btn-success" ng-class="{'btn-success': (updating == false), 'btn-danger': (updating == true)}" />
-  <div ng-controller="TimerController" ng-hide="!updating">
+  <input type="button" value="Update IP now" (click)="updateAllDomains()" class="btn-primary btn-lg" />
+  <input type="button" value="{{ this.autoUpdateEnabled ? 'Stop auto-update' : 'Start auto-update' }}"
+         (click)="toggleAutoUpdate()"
+         class="btn-lg"
+         [ngClass]="{'btn-success': !autoUpdateEnabled, 'btn-danger': autoUpdateEnabled}" />
+  <div [hidden]="!autoUpdateEnabled">
     <br />
-    <b>Next update in:
-      <!-- <timer interval="1000" countdown="1">{{countdown}}</timer> &nbsp;seconds -->
-    </b>
+    <b>Next update in: {{ timerService.remainingSeconds }} seconds</b>
+
+
+
   </div>
 </div>
