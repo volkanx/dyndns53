@@ -1,0 +1,58 @@
+<div class="img-rounded alt-div-color2">
+  <h3>Settings</h3>
+  <form name="settingsForm" (ngSubmit)="saveValues()" novalidate formValidator>
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-2"><label>Update interval:</label></div>
+        <div class="col-sm-10">
+          <input type="number" name="updateInterval" [(ngModel)]="settings.updateInterval" class="input" maxlength=4 min=1 step=1 required="required" /> &nbsp;minutes
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-2"><label>Route53 Access Key:</label></div>
+        <div class="col-sm-10">
+          <input type="text" name="accessKey" [(ngModel)]="settings.accessKey" placeholder="AWS Access Key with Route53 access" size="50" required="required" />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-2"><label>Route53 Secret Key:</label></div>
+        <div class="col-sm-10">
+          <input type="password" name="secretKey" [(ngModel)]="settings.secretKey" placeholder="AWS Secret Key with Route53 access" size="50" required="required" />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-2"><label>Max log lines to keep:</label></div>
+        <div class="col-sm-10">
+            <input type="number" name="maxLogRowCount" [(ngModel)]="settings.numberOfLogEntries" class="input" maxlength=4 min=1 step=1 required="required" />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-2"><label>Domain List:</label></div>
+        <div class="col-sm-10">
+          <table>
+            <thead><tr><th>Domain Name</th><th>Zone ID</th><th></th><th>Actions</th></tr></thead>
+            <tbody>
+              <tr *ngFor="let domain of settings.domainList; let i = index">
+                <td>{{domain.domainName}}</td>
+                <td>{{domain.zoneId}}</td>
+                <td>
+                  <img src="../../assets/img/delete_16x16.png" (click)="deleteDomain(i)" />
+                </td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <td><input name="domainName" #domainName /></td>
+                <td><input name="zoneId" #zoneId /></td>
+                <td>
+                  <img src="../../assets/img/add_16x16.png" (click)="addDomain(domainName.value, zoneId.value); domainName.value = ''; zoneId.value = '';" />
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </div>
+    <input type="submit" value="Save Settings" class="btn-primary" ng-disabled="settingsForm.$invalid" />
+  </form>
+</div>

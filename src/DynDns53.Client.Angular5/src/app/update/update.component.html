@@ -1,0 +1,15 @@
+<div class="img-rounded alt-div-color1">
+  <h3>Update DNS</h3>
+  <input type="button" value="Update IP now" (click)="updateAllDomains()" class="btn-primary btn-lg" />
+  <input type="button" value="{{ this.autoUpdateEnabled ? 'Stop auto-update' : 'Start auto-update' }}"
+         (click)="toggleAutoUpdate()"
+         class="btn-lg"
+         [ngClass]="{'btn-success': !autoUpdateEnabled, 'btn-danger': autoUpdateEnabled}" />
+  <div [hidden]="!autoUpdateEnabled">
+    <br />
+    <b>Next update in: {{ timerService.remainingSeconds }} seconds</b>
+
+
+
+  </div>
+</div>
