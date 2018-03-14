@@ -42,11 +42,11 @@ The library targets .NET Standard 2.0 so can be used in any .NET runtime compati
 
 ## Angular 5
 
-The website for the client is here. You can simply enter your keys and domains here and start using it right away. The keys are stored locally on the browser so nobody will have access to them.
+The website for the client can be found here: [dyndns53.myvirtualhome.net](http://dyndns53.myvirtualhome.net/). You can simply enter your keys and domains here and start using it right away. The keys are stored locally on the browser so nobody will have access to them.
 
 ![](/assets/Angular5-Overview.png)
 
-For more detial instructions visit [](http://dyndns53.myvirtualhome.net/) and click "Show Usage" to expand the information section.
+For more detial instructions visit [the application site](http://dyndns53.myvirtualhome.net/) and click "Show Usage" to expand the information section.
 
 
 ## .NET Core Console Application

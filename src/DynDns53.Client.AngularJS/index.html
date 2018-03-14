@@ -1,0 +1,189 @@
+<!DOCTYPE HTML>
+<html ng-app="dyndns53App">
+  <head>
+    <script src="js/angular.min.js"></script>
+    <script src="bower_components/moment/min/moment.min.js"></script> 
+    <script src="bower_components/moment/min/locales.min.js"></script> 
+    <script src="bower_components/humanize-duration/humanize-duration.js"></script> 
+    <script src="bower_components/angular-messages/angular-messages.js"></script>
+    <script src="js/angular-timer.min.js"></script> 
+    <script src="js/aws-sdk-2.2.39.min.js"></script>
+    <script src="js/jquery-1.12.1.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    
+    <script src="app/dyndns53.js"></script>
+    <script src="app/controllers/UsageController.js"></script>
+    <script src="app/controllers/SettingsController.js"></script>
+    <script src="app/controllers/UpdateController.js"></script>
+    <script src="app/controllers/TimerController.js"></script>
+    <script src="app/directives/domainListChecks.js"></script>
+    <script src="app/factories/GetExternalIP.js"></script>
+    <script src="app/factories/LocalStorage.js"></script>
+
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="css/dyndns53.css">
+  </head>
+  <body>
+    <nav class="navbar navbar-inverse">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="#">
+            <img src="img/DynDns53Logo.png" width="160" height="100">
+          </a>
+        </div>
+        <div class="navbar-header">
+          <h1 class="header1">DynDns53</h1>
+          <h4 class="header4">Online dynamic DNS tool</h4>
+        </div>
+        <a href="https://github.com/volkanx/dyndns53"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/652c5b9acfaddf3a9c326fa6bde407b87f7be0f4/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6f72616e67655f6666373630302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png"></a>
+      </div>
+    </nav>
+    <div ng-controller="UsageController" class="img-rounded alt-div-color1">
+      <button type="button" class="btn btn-info" ng-click="toggleUsage()">{{toggleUsageButtonText}}</button>
+      <div class="container-fluid collapse" ng-class="{'in': (hideUsage == 'false')}">
+        <h3>Usage</h3>
+        <div class="row">
+          <div class="col-sm-2"><img src="img/information.png" width="128" height="128" /></div>
+          <div class="col-sm-10 information">
+              <p>DynDns53 is a dynamic DNS tool running on your browser that doesn't require any software installation. To be able to use DynDns53, you'd need an AWS account.</p>
+              <b>AWS Setup:</b>
+              <p>
+                <ul>
+                  <li>First create an IAM account with full Route 53 access privileges on the domains you are planning to use with DynDns53.</li>
+                  <li>Then create an a A record for the domain or subdomain</li>
+                </ul>
+              </p>
+              <b>DynsDns53 Setup:</b>
+              <p>
+                <ul>
+                  <li>Enter your AWS access and secret key.</li>
+                  <li>Add the domain(s) you want to update to the list</li>
+                  <li>It's highly encouraged to test the settings by pressing <i>Update IP now</i> button</li>
+                  <li>Press <i>Start auto-update</i> button. As long as you keep the window open in your browser the domains will be updated with your current external IP address.</li>
+                </ul>
+              </p>              
+              <p><b>Please note, your keys never leave your browser. Everything is stored locally. If you switch browsers or go incognito, you'll have to re-enter the settings.</b></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div ng-controller="SettingsController" ng-init="loadValues()" class="img-rounded alt-div-color2">
+      <h3>Settings</h3>
+      <form name="settingsForm" ng-submit="saveValues()" novalidate formValidator>
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-sm-2"><label>Update interval:</label></div>
+            <div class="col-sm-10">
+              <input type="number" name="updateInterval" ng-model="$root.updateInterval" class="input" maxlength=4 min=1 step=1 required="required" /> &nbsp;minutes 
+              <div ng-messages="settingsForm.updateInterval.$error">
+                <p ng-message="required"><img src="img/info_16x16.png" />&nbsp;<i>An integer value between 1-9999 is required</i></p>
+                <p ng-message="maxlength"><img src="img/info_16x16.png" />&nbsp;<i>An integer value between 1-9999 is required</i></p>
+                <p ng-message="min"><img src="img/info_16x16.png" />&nbsp;<i>An integer value between 1-9999 is required</i></p>                
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-2"><label>Route53 Access Key:</label></div>
+            <div class="col-sm-10">
+              <input type="text" name="accessKey" ng-model="$root.accessKey" placeholder="AWS Access Key with Route53 access" size="50" required="required" />
+              <div ng-messages="settingsForm.accessKey.$error">
+                <p ng-message="required"><img src="img/info_16x16.png" />&nbsp;<i>AWS Access Key is required</i></p>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-2"><label>Route53 Secret Key:</label></div>
+            <div class="col-sm-10">
+              <input type="text" name="secretKey" ng-model="$root.secretKey" placeholder="AWS Secret Key with Route53 access" size="50" required="required" />
+              <div ng-messages="settingsForm.secretKey.$error">
+                <p ng-message="required"><img src="img/info_16x16.png" />&nbsp;<i>AWS Secret Key is required</i></p>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-2"><label>Max log lines to keep:</label></div>
+            <div class="col-sm-10">
+                <input type="number" name="maxLogRowCount" ng-model="$root.maxLogRowCount" class="input" maxlength=4 min=1 step=1 required="required" />
+                <div ng-messages="settingsForm.maxLogRowCount.$error">
+                  <p ng-message="required"><img src="img/info_16x16.png" />&nbsp;<i>An integer value between 1-9999 is required</i></p>
+                  <p ng-message="maxlength"><img src="img/info_16x16.png" />&nbsp;<i>An integer value between 1-9999 is required</i></p>
+                  <p ng-message="min"><img src="img/info_16x16.png" />&nbsp;<i>An integer value between 1-9999 is required</i></p>
+                </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-2"><label>Domain List:</label></div>
+            <div class="col-sm-10">
+              
+              <table>
+                <thead><tr><th>Domain Name</th><th>Zone ID</th><th></th></tr></thead>
+                <tbody>
+                  <tr ng-repeat="domain in domainList.domains track by $index">
+                      <td><input type="text" ng-model="domain.name" required="required" ng-change="domainsUpdated()" /></td>
+                      <td><input type="text" ng-model="domain.zoneId" required="required" ng-change="domainsUpdated()" /></td>
+                      <td>
+                        <span class="field-tip">
+                          <img src="img/cancel_16x16.png" ng-click="deleteDomain($index)" />
+                          <span class="tip-content">Remove this domain from the list</span>
+                        </span>
+                      </td>
+                  </tr>
+                </tbody>
+              </table>
+              <input type="hidden" name="domainListHidden" ng-model="domainList" domain-list-checks>
+              <input type="button" value="Add domain" class="btn-success" ng-click="addDomain()" />
+              <div ng-messages="settingsForm.domainListHidden.$error">
+                <p ng-message="emptyDomainList"><img src="img/info_16x16.png" />&nbsp;<i>At least 1 domain is required</i></p>
+                <p ng-message="nameAndZoneIdRequired"><i>Domain name and zone ID are required</i></p>
+              </div>              
+            </div>
+          </div>
+        </div>
+        <input type="submit" value="Save Settings" class="btn-primary" ng-disabled="settingsForm.$invalid" />
+      </form>
+    </div>
+
+    <div ng-controller="UpdateController" class="img-rounded alt-div-color1">
+      <h3>Update DNS</h3>
+      <input type="button" value="Update IP now" ng-click="updateAllDomains()" class="btn-primary" />
+      <input type="button" value="{{ updating ? 'Stop auto-update' : 'Start auto-update' }}" 
+             ng-click="toggleAutoUpdate()" 
+             class="btn-success" ng-class="{'btn-success': (updating == false), 'btn-danger': (updating == true)}" />
+      <div ng-controller="TimerController" ng-hide="!updating">
+        <br />
+        <b>Next update in: 
+          <timer interval="1000" countdown="1">{{countdown}}</timer> &nbsp;seconds
+        </b>
+      </div>
+    </div>
+
+    <div class="img-rounded alt-div-color2">
+      <h3>Event Log</h3>
+      <div class="container-fluid">
+        <div class="row">
+          <textarea rows="10" cols="120" ng-model="$root.logDataString"></textarea>    
+        </div>
+        <div class="row">
+          <input type="button" value="Clear event log" ng-click="clearLog()" class="btn-primary" />  
+        </div>
+      </div>
+    </div>
+    <div id="footer">
+        <p class="copyright text-center">Developed by <a href="http://volkanpaksoy.com" target="_">Volkan Paksoy</a> </p>
+        <p class="text-center">v1.00</p>
+    </div>
+  </body>
+</html>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-66051201-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
