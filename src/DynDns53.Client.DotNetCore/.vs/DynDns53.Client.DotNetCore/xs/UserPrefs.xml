@@ -1,0 +1,26 @@
+﻿<Properties StartupConfiguration="{C01AB696-EF4F-4556-A60E-15167E541C5E}|Default">
+  <MonoDevelop.Ide.Workbench ActiveDocument="DynDns53.Client.DotNetCore/Program.cs">
+    <Files>
+      <File FileName="DynDns53.Client.DotNetCore/DynDns53ConsoleClient.cs" Line="1" Column="1" />
+      <File FileName="DynDns53.Client.DotNetCore/Program.cs" Line="57" Column="46" />
+      <File FileName="DynDns53.Client.DotNetCore/Dockerfile" Line="6" Column="1" />
+      <File FileName="DynDns53.Client.DotNetCore/Configuration.cs" Line="32" Column="18" />
+      <File FileName="docker-compose.yml" Line="1" Column="1" />
+      <File FileName="docker-compose.ci.build.yml" Line="1" Column="1" />
+      <File FileName="../../../../../../../../../Applications/Visual Studio.app/Contents/Resources/lib/monodevelop/AddIns/docker/MonoDevelop.Docker/MSBuild/Sdks/Microsoft.Docker.Sdk/build/Microsoft.Docker.targets" Line="111" Column="5" />
+      <File FileName="DynDns53.Client.DotNetCore/project.json" Line="1" Column="1" />
+      <File FileName="DynDns53.Client.DotNetCore/ConsoleConfigHandler.cs" Line="17" Column="40" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Release" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.ItemProperties.DynDns53.Client.DotNetCore PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.ItemProperties.docker-compose PreferredExecutionTarget="MonoDevelop.Default" />
+  <MultiItemStartupConfigurations />
+  <DisabledProjects>
+    <String>../DynDns53.CoreLib/DynDns53.CoreLib/DynDns53.CoreLib.csproj</String>
+  </DisabledProjects>
+</Properties>

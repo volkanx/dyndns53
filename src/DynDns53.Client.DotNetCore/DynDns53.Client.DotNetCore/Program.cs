@@ -20,7 +20,7 @@ namespace DynDns53.Client.DotNetCore
             container = new Container();
 
             container.Register<IAmazonRoute53>(() =>
-            { 
+            {
                 return new AmazonRoute53Client(config.AccessKey, config.SecretKey, RegionEndpoint.GetBySystemName("us-east-1")); 
             }, Lifestyle.Singleton);
 
@@ -43,6 +43,8 @@ namespace DynDns53.Client.DotNetCore
 
         private void PrintUsage()
         {
+            Console.WriteLine($"{Environment.MachineName}");
+
             Console.WriteLine("Usage: ");
             Console.WriteLine("dotnet DynDns53.Client.DotNetCore.dll --AccessKey ACCESS_KEY --SecretKey SECRET_KEY --Domains zoneId1:domain1 zoneId2:domain2 [--Interval 300] [--IPChecker Custom]");
             Console.WriteLine("AccessKey: Mandatory. AWS IAM Account Access Key with Route53 access");
