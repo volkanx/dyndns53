@@ -1,14 +1,14 @@
 ﻿<Properties StartupConfiguration="{C01AB696-EF4F-4556-A60E-15167E541C5E}|Default">
   <MonoDevelop.Ide.Workbench ActiveDocument="DynDns53.Client.DotNetCore/Configuration.cs">
     <Files>
-      <File FileName="DynDns53.Client.DotNetCore/DynDns53ConsoleClient.cs" Line="1" Column="1" />
-      <File FileName="DynDns53.Client.DotNetCore/Program.cs" Line="28" Column="10" />
+      <File FileName="DynDns53.Client.DotNetCore/DynDns53ConsoleClient.cs" Line="84" Column="13" />
+      <File FileName="DynDns53.Client.DotNetCore/Program.cs" Line="36" Column="13" />
       <File FileName="DynDns53.Client.DotNetCore/Dockerfile" Line="6" Column="1" />
-      <File FileName="DynDns53.Client.DotNetCore/Configuration.cs" Line="26" Column="3" />
+      <File FileName="DynDns53.Client.DotNetCore/Configuration.cs" Line="54" Column="6" />
       <File FileName="docker-compose.yml" Line="1" Column="1" />
       <File FileName="docker-compose.ci.build.yml" Line="1" Column="1" />
       <File FileName="../../../../../../../../../Applications/Visual Studio.app/Contents/Resources/lib/monodevelop/AddIns/docker/MonoDevelop.Docker/MSBuild/Sdks/Microsoft.Docker.Sdk/build/Microsoft.Docker.targets" Line="111" Column="5" />
-      <File FileName="DynDns53.Client.DotNetCore/ConsoleConfigHandler.cs" Line="17" Column="40" />
+      <File FileName="DynDns53.Client.DotNetCore/ConsoleConfigHandler.cs" Line="28" Column="10" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Release" />
