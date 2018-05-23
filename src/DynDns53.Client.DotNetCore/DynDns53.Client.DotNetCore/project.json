@@ -1,3 +1,12 @@
-﻿"buildOptions": {
-  "outputName": "dyndns53"
+﻿
+{ 
+  "buildOptions": {
+    "outputName": "dyndns53"
+  },
+
+  "AWS": {
+    "Profile": "cloudwatchLogger",
+    "Region": "eu-west-2"
+  }
+
 }

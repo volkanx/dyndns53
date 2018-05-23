@@ -6,6 +6,7 @@ using Amazon.Route53;
 using DynDns53.CoreLib;
 using DynDns53.CoreLib.Config;
 using DynDns53.CoreLib.IPChecker;
+using log4net;
 using Watchdog.Core;
 
 namespace DynDns53.Client.DotNetCore
@@ -15,13 +16,16 @@ namespace DynDns53.Client.DotNetCore
         private readonly IConfigHandler configHandler;
         private readonly IAmazonRoute53 route53Client;
 		private readonly IHeartbeatService heartbeatService;
+		private readonly ILog logger;
 		private Configuration config;
 
-		public DynDns53ConsoleClient(IConfigHandler configHandler, IAmazonRoute53 route53Client, IHeartbeatService heartbeatService)
+
+		public DynDns53ConsoleClient(IConfigHandler configHandler, IAmazonRoute53 route53Client, IHeartbeatService heartbeatService, ILog logger)
         {
             this.configHandler = configHandler;
             this.route53Client = route53Client;
 			this.heartbeatService = heartbeatService;
+			this.logger = logger;
         }
 
         public async Task StartApplication(Configuration config)
@@ -33,7 +37,7 @@ namespace DynDns53.Client.DotNetCore
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
+				logger.Error(ex);
                 return;
             }
         }
@@ -47,19 +51,19 @@ namespace DynDns53.Client.DotNetCore
             {            
                 try
 				{
-					Console.WriteLine("Getting public IP...");
+					logger.Info("Getting public IP...");
                     var ipAddress = await ipChecker.GetExternalIpAsync();
-                    Console.WriteLine($"Current public IP: {ipAddress}");
+					logger.Info($"Current public IP: {ipAddress}");
 
-                    Console.WriteLine("Updating DNS...");
+					logger.Info("Updating DNS...");
 					await dynDns53.UpdateAllAsync(ipAddress, this.config.DomainList);
-					Console.WriteLine($"Update completed. Waiting for {this.config.UpdateInterval} seconds");
+					logger.Info($"Update completed. Waiting for {this.config.UpdateInterval} seconds");
 
 					SendHeartbeat();
 				}
 				catch (Exception ex)
 				{
-					Console.WriteLine($"Exception: {ex.Message}");
+					logger.Error($"Exception: {ex.Message}");
 				}
                 
 				System.Threading.Thread.Sleep(this.config.UpdateInterval.Value * 1000);
@@ -74,7 +78,7 @@ namespace DynDns53.Client.DotNetCore
 				return;
 			}
 
-			Console.WriteLine("Sending heartbeat");
+			logger.Info("Sending heartbeat");
 
 			var heartbeat = new Heartbeat
             {
@@ -84,7 +88,7 @@ namespace DynDns53.Client.DotNetCore
             
 			heartbeatService.SendHeartbeat(heartbeat);
 
-			Console.WriteLine("Heartbeat sent");
+			logger.Info("Heartbeat sent");
 		}
     }
 }

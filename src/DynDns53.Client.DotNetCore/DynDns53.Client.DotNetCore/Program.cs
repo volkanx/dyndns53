@@ -7,13 +7,18 @@ using CommandLine;
 using Newtonsoft.Json;
 using DynDns53.CoreLib.Config;
 using Watchdog.Core;
+using System.Xml;
+using System.IO;
+using System.Reflection;
+using log4net;
 
 namespace DynDns53.Client.DotNetCore
 {
     class Program
     {
-        static Container container;
-
+        private static Container container;
+		private static ILog logger;
+        
         private void InitializeIOCContainer(Configuration config)
         {
             container = new Container();
@@ -33,7 +38,7 @@ namespace DynDns53.Client.DotNetCore
                     ApiKey = config.HeartbeatServiceApiKey
                 };
 			});
-                     
+            
 			container.Verify();
         }
 
@@ -70,6 +75,7 @@ namespace DynDns53.Client.DotNetCore
         static async Task Main(string[] args)
         {
             var p = new Program();
+			ConfigureLogging();
 
             if (args.Length == 0)
             {
@@ -84,7 +90,7 @@ namespace DynDns53.Client.DotNetCore
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+				logger.Error(ex.Message);
                 p.PrintUsage();
                 return;
             }
@@ -94,8 +100,18 @@ namespace DynDns53.Client.DotNetCore
             var configHandler = container.GetInstance<IConfigHandler>();
             var route53Client = container.GetInstance<IAmazonRoute53>();
 			var heartbeatService = container.GetInstance<IHeartbeatService>();
-			var client = new DynDns53ConsoleClient(configHandler, route53Client, heartbeatService);
+			var client = new DynDns53ConsoleClient(configHandler, route53Client, heartbeatService, logger);
             await client.StartApplication(config);
+        }
+
+		private static void ConfigureLogging()
+        {
+            var log4NetConfig = new XmlDocument();
+            log4NetConfig.Load(File.OpenRead("log4net.config"));
+            var repo = log4net.LogManager.CreateRepository(Assembly.GetEntryAssembly(), typeof(log4net.Repository.Hierarchy.Hierarchy));
+            log4net.Config.XmlConfigurator.Configure(repo, log4NetConfig["log4net"]);
+
+			logger = log4net.LogManager.GetLogger(typeof(Program));
         }
     }
 }
