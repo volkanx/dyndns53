@@ -10,7 +10,7 @@ export class ExternalIpService {
 
   constructor(private http: HttpClient) { }
 
-  readonly url: string = 'https://8x6c5h83d9.execute-api.eu-west-2.amazonaws.com/prod';
+  readonly url: string = 'https://46ebv5trsk.execute-api.eu-west-2.amazonaws.com/prod';
 
   getIP(): Observable<any> {
     return this.http.get(this.url);
