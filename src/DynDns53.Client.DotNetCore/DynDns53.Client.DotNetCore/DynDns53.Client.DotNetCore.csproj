@@ -19,7 +19,7 @@
     <PackageReference Include="DynDns53.CoreLib" Version="1.0.12" />
     <PackageReference Include="SimpleInjector" Version="4.2.2" />
     <PackageReference Include="Watchdog.Core" Version="1.0.1" />
-    <PackageReference Include="log4net" Version="2.0.8" />
+    <PackageReference Include="log4net" Version="2.0.10" />
     <PackageReference Include="AWS.Logger.Log4net" Version="1.1.7" />
   </ItemGroup>
   <ItemGroup>
